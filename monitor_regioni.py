@@ -1,4 +1,4 @@
-"""Controlla l'elenco delle regioni nel modulo di candidatura di Affari Tuoi
+"""Controlla l'elenco delle regioni nel modulo di candidatura di A.T. RAI
 e manda un messaggio Telegram quando cambia."""
 
 import json
