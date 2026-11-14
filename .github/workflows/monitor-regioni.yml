@@ -1,0 +1,42 @@
+name: Monitor regioni Affari Tuoi
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # ogni 30 minuti (orario UTC)
+  workflow_dispatch:          # permette l'avvio manuale dal tab Actions
+
+permissions:
+  contents: write             # serve per salvare regioni.json nel repo
+
+concurrency:
+  group: monitor-regioni
+  cancel-in-progress: false
+
+jobs:
+  controlla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa dipendenze
+        run: pip install requests beautifulsoup4
+
+      - name: Controlla le regioni
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python monitor_regioni.py
+
+      - name: Salva lo stato se è cambiato
+        run: |
+          if [ -n "$(git status --porcelain regioni.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add regioni.json
+            git commit -m "Aggiorna elenco regioni"
+            git push
+          fi
