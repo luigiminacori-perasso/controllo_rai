@@ -2,7 +2,7 @@ name: Monitor regioni A.T. RAI
 
 on:
   schedule:
-    - cron: "*/20 * * * *"    # ogni 30 minuti (orario UTC)
+    - cron: "*/20 * * * *"    # ogni 20 minuti (orario UTC)
   workflow_dispatch:          # permette l'avvio manuale dal tab Actions
 
 permissions:
